@@ -1,0 +1,59 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+.wrapper {
+  min-height: 100%;
+
+  /* Equal to height of footer */
+  /* But also accounting for potential margin-bottom of last child */
+  margin-bottom: -50px;
+}
+.footer,
+.push {
+  height: 50px;
+}
+
+#loginAlert {
+  display: none;
+}
+
+.mainContainer {
+  padding: 20px;
+}
+
+.time {
+  color: gray;
+  /* padding-left: 10px; */
+  float:right;
+}
+
+.tweet {
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+  overflow-wrap: break-word;
+
+}
+
+#searchButton{
+  white-space: nowrap;
+}
+
+#postTweetButton {
+  margin-top: 10px;
+}
+
+#tweetBox {
+  border: 1px solid grey;
+}
+  
+#tweetSuccess {
+  display: none;
+}
+
+#tweetFail {
+  display: none;
+}
+
