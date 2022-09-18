@@ -45,7 +45,8 @@ function displayTweets($type)
         $query = "SELECT * FROM `isFollowing` WHERE follower = ". mysqli_real_escape_string($link, $_SESSION['id']) ;
         $result = mysqli_query($link, $query);
         $whereClause = "";
-        while ($row = mysqli_fetch_assoc($result)) {
+        while ($row = $result->fetch_assoc()) {
+        // while ($row = mysqli_fetch_assoc($result)) {
             if ($whereClause == "") $whereClause = "WHERE"; 
             else $whereClause .= " OR";
             $whereClause .= " userid = ".$row['isFollowing'];
@@ -56,6 +57,7 @@ function displayTweets($type)
         echo "<p>Showing search results for '".mysqli_real_escape_string($link, $_GET['q'])."':</p>";
         $whereClause = "WHERE `tweet` LIKE '%". mysqli_real_escape_string($link, $_GET['q'])."%'";
     } else if (is_numeric($type)) {
+
         $userQuery = "SELECT * FROM `users` WHERE id = " . mysqli_real_escape_string($link, $type) . " LIMIT 1";
         $userQueryResult = mysqli_query($link, $userQuery);
         $user = mysqli_fetch_assoc($userQueryResult);
@@ -66,13 +68,15 @@ function displayTweets($type)
      
     }
 
-    $query = "SELECT * FROM `tweets` ". $whereClause ." ORDER BY `datetime` DESC LIMIT 10";
+    $query = "SELECT * FROM `tweets` ". $whereClause ." ORDER BY `datetime` DESC";
     
     $result = mysqli_query($link, $query);
-    if (mysqli_num_rows($result) == 0) {
+    if ($result->num_rows == 0) {
+    // if (mysqli_num_rows($result) == 0) {
         echo "there are no tweets to display";
     } else {
-        while ($row = mysqli_fetch_assoc($result)) {
+        while ($row = $result->fetch_assoc()) {
+        // while ($row = mysqli_fetch_assoc($result)) {
 
             $userQuery = "SELECT * FROM `users` WHERE id = " . mysqli_real_escape_string($link, $row['userid']) . " LIMIT 1";
             $userQueryResult = mysqli_query($link, $userQuery);
@@ -87,12 +91,14 @@ function displayTweets($type)
             
             $isFollowingquery = "SELECT * FROM `isFollowing` WHERE follower = ". mysqli_real_escape_string($link, $_SESSION['id'])." AND isFollowing = ".mysqli_real_escape_string($link, $row['userid'])." LIMIT 1 " ;
             $isFollowingQueryResult = mysqli_query($link, $isFollowingquery);
-          
-            if (mysqli_num_rows($isFollowingQueryResult) > 0) {
+            
+            if ($isFollowingQueryResult->num_rows > 0) {
+            // if (mysqli_num_rows($isFollowingQueryResult) > 0) {
                echo "Unfollow";
             } else {
                 echo "Follow";
             }
+
             
 
             echo '</div></div>';
