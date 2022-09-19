@@ -12,6 +12,22 @@ if ($_GET['function'] == "logout") {
     session_unset();
 }
 
+if($_GET['function'] == "deleteAccount") {
+
+    $deleteFollowingQuery = "DELETE FROM `isFollowing` WHERE follower = ".mysqli_real_escape_string($link, $_SESSION['id'])."";
+    $deleteIsFollowingQuery = "DELETE FROM `isFollowing` WHERE isFollowing = ".mysqli_real_escape_string($link, $_SESSION['id'])."";
+    $deleteTweetQuery = "DELETE FROM `tweets` WHERE userid = ".mysqli_real_escape_string($link, $_SESSION['id'])."";
+    $deleteUserQuery = "DELETE FROM `users` WHERE id = ".mysqli_real_escape_string($link, $_SESSION['id'])."";
+
+    mysqli_query($link, $deleteFollowingQuery);
+    mysqli_query($link, $deleteIsFollowingQuery);
+    mysqli_query($link, $deleteTweetQuery);
+    mysqli_query($link, $deleteUserQuery);
+    session_unset();
+    echo "<p class=alert alert-danger'>Your account has been deleted</p>";
+}
+
+
 function time_since($since)
 {
     $chunks = array(
@@ -47,6 +63,7 @@ function displayTweets($type)
         $whereClause = "";
         while ($row = $result->fetch_assoc()) {
         // while ($row = mysqli_fetch_assoc($result)) {
+        // if ($row['follower'] != S_SESSION]) 
             if ($whereClause == "") $whereClause = "WHERE"; 
             else $whereClause .= " OR";
             $whereClause .= " userid = ".$row['isFollowing'];
@@ -61,9 +78,7 @@ function displayTweets($type)
         $userQuery = "SELECT * FROM `users` WHERE id = " . mysqli_real_escape_string($link, $type) . " LIMIT 1";
         $userQueryResult = mysqli_query($link, $userQuery);
         $user = mysqli_fetch_assoc($userQueryResult);
-
         echo "<h2>".mysqli_real_escape_string($link, $user['email'])."'s Tweets</h2>";
-
         $whereClause = "WHERE userid = ". mysqli_real_escape_string($link, $type);
      
     }
@@ -82,26 +97,38 @@ function displayTweets($type)
             $userQueryResult = mysqli_query($link, $userQuery);
             $user = mysqli_fetch_assoc($userQueryResult);
             
-            echo "<div class='tweet'>";
+            echo "<div tweetId=".$row['id']." class='tweet'>";
             echo "<p><a href='?page=publicprofiles&userId=".$user['id']."'>" . $user['email'] . "</a><span class='time'>" . time_since(time() - strtotime($row['datetime'])) . " ago</span>" . "</p>";
-
             echo "<p>" . $row['tweet'] . "</p>";
-
             echo '<div id="toggleFollow" type="button" class="btn-link toggleFollow" data-userId="'.$row["userid"].'">';
             
             $isFollowingquery = "SELECT * FROM `isFollowing` WHERE follower = ". mysqli_real_escape_string($link, $_SESSION['id'])." AND isFollowing = ".mysqli_real_escape_string($link, $row['userid'])." LIMIT 1 " ;
             $isFollowingQueryResult = mysqli_query($link, $isFollowingquery);
-            
-            if ($isFollowingQueryResult->num_rows > 0) {
+          
+            if ($_SESSION['id'] == $user['id']) {
+                echo "";
+                // echo "<button id='deleteTweet' class='btn btn-danger' >delete</button>";
+            } else if ($isFollowingQueryResult->num_rows > 0) {
             // if (mysqli_num_rows($isFollowingQueryResult) > 0) {
                echo "Unfollow";
             } else {
                 echo "Follow";
             }
+            
+            echo '</div>';
+            //pass in $row['id] to get id of tweet i want to delete pass in as dataId
+           
+            if ($_SESSION['id'] == $user['id']) {
+            echo '<button id="deleteTweet" tweetId='.$row['id'].' class="btn btn-outline-danger" >Delete Tweet</button>';
+            echo "<div id='deletedTweet' class='alert alert-danger'>Tweet Deleted</div>";
+            }
+            echo '</div>';
 
             
 
-            echo '</div></div>';
+            
+
+
            
         }
     }
@@ -143,9 +170,12 @@ function displayUsers() {
     while ($row = mysqli_fetch_assoc($result)) {
         echo "<p><a href='?page=publicprofiles&userId=".$row['id']."'>".$row['email']."</a></p>";
     }
- 
-
 }
 
-
-?>
+function displayYourTimelineOrTweets($type) {
+    if ($_SESSION['id'] != "") {
+        displayTweets($type);  
+        } else { 
+          echo "<p>must be logged in</p>";
+        } 
+}

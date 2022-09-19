@@ -16,8 +16,6 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <!-- <h5 class="modal-title" id="modalLoginHeader">Login</h5>
-        <h5 class="modal-title" id="modalSignupHeader">Signup</h5> -->
         <h5 class="modal-title" id="loginModalHeader">Login</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -45,85 +43,96 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-link" id="toggleSignupLogin">Don't have an account</button>
         <button type="button" id="loginSignupButton" class="btn btn-primary">Login</button>
-        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
       </div>
     </div>
   </div>
 </div>
 
 <script>
+  $("#toggleSignupLogin").click(function() {
 
-$("#toggleSignupLogin").click(function(){
+    if ($("#loginActive").val() == "1") {
+      $("#loginActive").val("0");
+      $("#loginModalHeader").html("Signup");
+      $("#loginSignupButton").html("Signup");
+      $("#toggleSignupLogin").html("Already have an account");
 
-  if ($("#loginActive").val() == "1") {
-    $("#loginActive").val("0");
-    $("#loginModalHeader").html("Signup");
-    $("#loginSignupButton").html("Signup");
-    $("#toggleSignupLogin").html("Already have an account");
- 
-  } else {
-    $("#loginActive").val("1");
-    $("#loginModalHeader").html("Login");
-    $("#loginSignupButton").html("Login");
-    $("#toggleSignupLogin").html("Don't have an account");
-  }
- 
-})
-
-$("#loginSignupButton").click(function() {
-  $.ajax({
-    type:"POST",
-    url: "actions.php?action=loginSignup",
-    data: "email=" + $("#email").val() + "&password=" + $("#password").val() + "&loginActive=" + $("#loginActive").val(),
-    success: function(result) {
-      if (result == 1) {
-        window.location.assign("index.php");
-      } else {
-        $("#loginAlert").html(result).show();
-      }
+    } else {
+      $("#loginActive").val("1");
+      $("#loginModalHeader").html("Login");
+      $("#loginSignupButton").html("Login");
+      $("#toggleSignupLogin").html("Don't have an account");
     }
-  })
-})
 
-$(".toggleFollow").click(function() {
-  var id = $(this).attr("data-userId")
-  $.ajax({
-    type:"POST",
-    url: "actions.php?action=toggleFollow",
-    data: "userId=" + id,
-    success: function(result) {
-      if (result == "1") {
-        $("#toggleFollow[data-userId='" + id + "']").html("Follow");
-      } else if (result == "2") {
-        $("#toggleFollow[data-userId='" + id + "']").html("Unfollow");
-      }
-    }
   })
 
-})
-
-$("#postTweetButton").click(function() {
-  // alert ($("#tweetContent").val())
-  $.ajax({
-    type:"POST",
-    url: "actions.php?action=postTweet",
-    data: "tweetContent=" + $("#tweetContent").val(),
-    success: function(result) {
-      if (result == "1"){
-        $("#tweetSuccess").show();
-        $("#tweetFail"),hide();
-      } else if (result != "") {
-        $("#tweetFail").html(result).show();
-        $("#tweetSuccess"),hide();
+  $("#loginSignupButton").click(function() {
+    $.ajax({
+      type: "POST",
+      url: "actions.php?action=loginSignup",
+      data: "email=" + $("#email").val() + "&password=" + $("#password").val() + "&loginActive=" + $("#loginActive").val(),
+      success: function(result) {
+        if (result == 1) {
+          window.location.assign("index.php");
+        } else {
+          $("#loginAlert").html(result).show();
+        }
       }
-       
-    }
+    })
   })
- 
-})
 
+  $(".toggleFollow").click(function() {
+    var id = $(this).attr("data-userId")
+    $.ajax({
+      type: "POST",
+      url: "actions.php?action=toggleFollow",
+      data: "userId=" + id,
+      success: function(result) {
+        if (result == "1") {
+          $("#toggleFollow[data-userId='" + id + "']").html("Follow");
+        } else if (result == "2") {
+          $("#toggleFollow[data-userId='" + id + "']").html("Unfollow");
+        }
+      }
+    })
 
+  })
 
+  $("#postTweetButton").click(function() {
+    $.ajax({
+      type: "POST",
+      url: "actions.php?action=postTweet",
+      data: "tweetContent=" + $("#tweetContent").val(),
+      success: function(result) {
+        if (result == "1") {
+          $("#tweetSuccess").show();
+          $("#tweetFail").hide();
+        } else if (result != "") {
+          $("#tweetFail").html(result).show();
+          $("#tweetSuccess").hide();
+
+        }
+
+      }
+    })
+
+  })
+
+  $("#deleteTweet").click(function() {
+    var tweetId = $(this).attr("tweetId")
+    $.ajax({
+      type: "POST",
+      url: "actions.php?action=deleteTweet",
+      data: "tweetId=" + tweetId,
+      success: function(result) {
+        if (result == 1) {
+          $("#deleteTweet").hide();
+          $("#deletedTweet").show();
+        }
+
+      }
+    })
+  })
 </script>
 
 

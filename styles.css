@@ -1,6 +1,11 @@
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
+}
+
+nav {
+  background-color: darkblue;
 }
 .wrapper {
   min-height: 100%;
@@ -25,7 +30,7 @@ html, body {
 .time {
   color: gray;
   /* padding-left: 10px; */
-  float:right;
+  float: right;
 }
 
 .tweet {
@@ -34,10 +39,9 @@ html, body {
   padding: 5px;
   margin: 5px;
   overflow-wrap: break-word;
-
 }
 
-#searchButton{
+#searchButton {
   white-space: nowrap;
 }
 
@@ -48,12 +52,16 @@ html, body {
 #tweetBox {
   border: 1px solid grey;
 }
-  
+
 #tweetSuccess {
   display: none;
 }
 
-#tweetFail {
+#tweetFail,
+#deletedTweet {
   display: none;
 }
 
+#deleteTweet {
+  zoom: 80%;
+}

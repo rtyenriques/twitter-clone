@@ -10,9 +10,7 @@ if ($_GET['page'] == 'timeline') {
     include("views/search.php");
 } else if ($_GET['page'] == "publicprofiles") {
     include("views/publicprofiles.php");
+} else {
+    include("views/home.php");
 }
- else {
-   include("views/home.php");
-}
-
 include("views/footer.php");
