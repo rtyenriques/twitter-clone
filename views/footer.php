@@ -92,6 +92,8 @@
           $("#toggleFollow[data-userId='" + id + "']").html("Follow");
         } else if (result == "2") {
           $("#toggleFollow[data-userId='" + id + "']").html("Unfollow");
+        } else {
+          alert("Must be logged in");
         }
       }
     })
@@ -128,6 +130,7 @@
         if (result == 1) {
           $("#deleteTweet").hide();
           $("#deletedTweet").show();
+          // window.location.assign("views/yourtweets.php");
         }
 
       }
